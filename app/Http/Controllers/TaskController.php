@@ -17,10 +17,10 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = Task::all();
+        $test = Task::all();
 
         return view('tasks.index', [
-            'tasks' => $tasks,
+            'test' => $test,
         ]);
     }
 
@@ -46,6 +46,10 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'content' => 'required|max:191',
+        ]);
+
         $task = new Task;
         $task->content = $request->content;
         $task->save();
@@ -92,6 +96,11 @@ class TaskController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // mod by ryo nakajima 2018/06/01
+        $this->validate($request, [
+            'content' => 'required|max:191',
+        ]);
+        //
         $task = Task::find($id);
         $task->content = $request->content;
         $task->save();
