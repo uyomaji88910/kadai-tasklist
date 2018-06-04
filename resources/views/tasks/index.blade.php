@@ -6,14 +6,13 @@
 
     @if (count($test) > 0)
         <ul>
-            @foreach ($test as $task)
-              ------------------------------------------------------
-                <li>{!! link_to_route('tasks.show', $task->id, ['id' => $task->id]) !!}
-   @empty ($task->status && $task->content)!!!!!!!!! Empty !!!!!!!!!!   ステータスかコンテンツが空です！
+            @foreach ($test as $task)=====================================
+                <li>Number {!! link_to_route('tasks.show', $task->id, ['id' => $task->id]) !!}
+   @empty ($task->status && $task->content)　  空のコラムがあります！
 　　　　　　　　　　　@endempty
                      <br> ステータス : {{ $task->status }}
                      <br> コンテンツ : {{ $task->content }}
-                     <br>
+                     <br>=====================================
                 </li>
             @endforeach
         </ul>
