@@ -12,5 +12,11 @@
 */
 
 // add by Ryo Nakajima 2018/05/29
-Route::get('/', 'TaskController@index');
-Route::resource('tasks', 'TaskController');
+// Route::get('/', 'TaskController@index');
+Route::get('/', function () {
+    return view('welcome');
+});
+Route::resource('tasks', 'TaskController'); // Ryo Nakajima
+// user registration
+Route::get('signup', 'Auth\RegisterController@showRegistrationForm')->name('signup.get');
+Route::post('signup', 'Auth\RegisterController@register')->name('signup.post');
