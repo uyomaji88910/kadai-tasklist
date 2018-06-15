@@ -11,12 +11,14 @@
 |
 */
 
-// add by Ryo Nakajima 2018/05/29
-// Route::get('/', 'TaskController@index');
-Route::get('/', function () {
-    return view('welcome');
+
+//Route::group(['middleware' => 'auth'], function () { 
+Route::get('/', 'TaskController@index'); // add by Ryo 06/12
+
+Route::group(['middleware' => ['auth']], function () {
+    Route::resource('tasks', 'TaskController'); 
 });
-Route::resource('tasks', 'TaskController'); // Ryo Nakajima
+
 // user registration
 Route::get('signup', 'Auth\RegisterController@showRegistrationForm')->name('signup.get');
 Route::post('signup', 'Auth\RegisterController@register')->name('signup.post');

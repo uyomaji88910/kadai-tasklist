@@ -17,11 +17,15 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $task = Task::all();
-
-        return view('tasks.index', [
-            'tasks' => $task,
-        ]);
+        if (\Auth::check()) { // go to index add by Ryo Nakajima 2018/06/12
+            $user = \Auth::user();
+            $task = $user->task()->orderBy('id', 'asc')->paginate(10);
+            return view('tasks.index', [
+                'tasks' => $task,
+            ]);
+        } else { // go to welcome if no login!! add by Ryo Nakajima 2018/06/12
+            return view('welcome');
+        }
     }
 
     /**
@@ -31,11 +35,15 @@ class TaskController extends Controller
      */
     public function create()
     {
-        $task = new Task;
-
-        return view('tasks.create', [
-            'task' => $task,
-        ]);
+        if (\Auth::check()) { // go to index add by Ryo Nakajima 2018/06/12
+            // Edit Ryo 06/14
+            $task = new Task;
+            return view('tasks.create', [
+                        'task' => $task,
+            ]);
+        } else { // go to welcome if no login!! add by Ryo Nakajima 2018/06/12
+            return view('welcome');
+        }
     }
 
     /**
@@ -53,10 +61,12 @@ class TaskController extends Controller
 
         $task = new Task;
         $task->content = $request->content;
-        $task->status = $request->status; // add by Ryo Nakajima
+        $task->status = $request->status;        
+        $user = \Auth::user(); // add by Ryo Nakajima 2018/06/14
+        $task->user_id = $user->id; // get user_id from User
         $task->save();
 
-        return redirect('/');
+        return redirect('/tasks');
     }
 
     /**
@@ -67,11 +77,16 @@ class TaskController extends Controller
      */
     public function show($id)
     {
+        // Edit Ryo 06/15
         $task = Task::find($id);
+        if (\Auth::id() === $task->user_id) {
+            return view('tasks.show', [
+                'task' => $task,
+            ]);
+        } else {
 
-        return view('tasks.show', [
-            'task' => $task,
-        ]);
+            return redirect('/tasks');
+        }
     }
 
     /**
@@ -83,10 +98,16 @@ class TaskController extends Controller
     public function edit($id)
     {
         $task = Task::find($id);
+        // Edit Ryo 06/15
+        $task = Task::find($id);
+        if (\Auth::id() === $task->user_id) {
+            return view('tasks.edit', [
+                'task' => $task,
+            ]);
+        } else {
 
-        return view('tasks.edit', [
-            'task' => $task,
-        ]);
+            return redirect('/tasks');
+        }
     }
 
     /**
@@ -109,7 +130,7 @@ class TaskController extends Controller
         $task->status = $request->status;
         $task->save();
 
-        return redirect('/');
+        return redirect('/tasks');
     }
 
     /**
@@ -123,6 +144,6 @@ class TaskController extends Controller
         $task = Task::find($id);
         $task->delete();
 
-        return redirect('/');
+        return redirect('/tasks');
     }
 }
